@@ -66,29 +66,43 @@ it. What it reliably prevents is the dominant real failure — an agent acting o
 and, because it is *declared*, a reviewer can read what a given install may reach. It must never
 be described as isolation, or people stop asking for the real thing.
 
-## Opinionated defaults: refuse, warn, and let them override in the open
+## Opinionated defaults: get work done, restrict on purpose
 
-We are open source; anyone can fork or ignore us. So the defaults are not enforcement, they are
-**an opinion with a visible escape hatch**:
+We are open source; anyone can fork or ignore us. So the defaults are an opinion, not enforcement —
+and the opinion is **permissive**, per
+[DEC-017](https://github.com/CloudSecurityAlliance-Internal/CINO-Platform-Engineering/blob/main/DECISIONS.md):
 
-- **Refuse by default** where the failure is irreversible or reaches a third party.
-- **Warn, do not block**, where the action is destructive but instantly recoverable.
-- **Override per control, never by one master switch.** `--unsafe` gets set once during a bad
-  afternoon and lives forever; a named variable reads as alarming in a config file, which it
-  should.
-- **The server reports its own overrides at runtime.** An override recorded only in an environment
-  nobody re-reads is how a fleet quietly opts out. If the server can be asked what it may do, it
-  can be asked what it has been told to ignore — and the model operating without a guard should
-  be told so too.
+- **A fresh install can do the work it was installed for.** No enumerating permissions first.
+  `csa-google-workspace` shipped refuse-by-default and removed it, because it blocked ordinary work
+  while the real boundary sat server-side.
+- **Restrictions are available, per-control, and declared** — an allowlist, a capability list, a
+  read-only switch — so a reviewer can read what a given install may reach. Never one master switch:
+  `--unsafe` gets set once during a bad afternoon and lives forever.
+- **A restriction fails closed when it is malformed.** "I tried to restrict this and it silently did
+  nothing" is a worse failure than refusing to start.
+- **The server can report its own posture at runtime.** Several CSA servers already expose
+  `describe_capabilities` / `describe_configuration`; asking fifteen servers what they may do should
+  not mean auditing fifteen environments.
+
+Two tiers sit **above** this and are not permissive, per
+[DEC-016](https://github.com/CloudSecurityAlliance-Internal/CINO-Platform-Engineering/blob/main/DECISIONS.md):
+**red** capabilities have no code path at all (account deletion, purges, removing a legal hold,
+financial operations), and **orange** ones — those whose primary effect is to weaken the controls
+around them — need a second grant that does not live in the same place as the first.
 
 **We ship the taxonomy, not the verdicts.** Which operations are dangerous is a judgement only the
-people who know that vendor can make. What the foundation provides is the vocabulary to make it
-in: **Effect · Reversibility · Reach · Authority**, with reversibility *ternary* —
-`reversible · reversible-for-a-period · irreversible`.
+people who know that vendor can make. What the foundation provides is the vocabulary to make it in:
+**Effect · Reversibility · Reach · Authority**, with reversibility *ternary* —
+`reversible · reversible-for-a-period · irreversible`. It informs what an operator chooses to switch
+off; it does not decide for them.
 
 The axis that earns its place in the guidance is **Reach**, because it is the one people miss
 unaided: a public reply is trivially reversible in the database and completely irreversible in the
 world. An author reasoning only from "can I undo this?" will file it as safe.
+
+And one refinement worth stealing from `csa-google-workspace`, which scopes reversibility to the
+tool's own reach rather than the vendor's: *"revision history means a **person** can recover;
+nothing this library exposes can, which is the sense in which it is irreversible HERE."*
 
 ## Candidate scope
 
