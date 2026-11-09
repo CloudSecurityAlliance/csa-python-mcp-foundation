@@ -70,7 +70,7 @@ be described as isolation, or people stop asking for the real thing.
 
 We are open source; anyone can fork or ignore us. So the defaults are an opinion, not enforcement —
 and the opinion is **permissive**, per
-[DEC-017](https://github.com/CloudSecurityAlliance-Internal/CINO-Platform-Engineering/blob/main/DECISIONS.md):
+[DEC-017](https://github.com/CloudSecurityAlliance-Internal/CINO-Engineering/blob/main/DECISIONS.md):
 
 - **A fresh install can do the work it was installed for.** No enumerating permissions first.
   `csa-google-workspace` shipped refuse-by-default and removed it, because it blocked ordinary work
@@ -85,7 +85,7 @@ and the opinion is **permissive**, per
   not mean auditing fifteen environments.
 
 Two tiers sit **above** this and are not permissive, per
-[DEC-016](https://github.com/CloudSecurityAlliance-Internal/CINO-Platform-Engineering/blob/main/DECISIONS.md):
+[DEC-016](https://github.com/CloudSecurityAlliance-Internal/CINO-Engineering/blob/main/DECISIONS.md):
 **red** capabilities have no code path at all (account deletion, purges, removing a legal hold,
 financial operations), and **orange** ones — those whose primary effect is to weaken the controls
 around them — need a second grant that does not live in the same place as the first.
@@ -133,7 +133,7 @@ exists for a reason.
 ## Where the thinking lives
 
 The cross-cutting practice — what *every* CSA MCP server owes, the three server classes, and the
-engineering discipline that is not MCP-specific — lives in **CINO-Platform-Engineering**
+engineering discipline that is not MCP-specific — lives in **CINO-Engineering**
 (`surfaces/mcp/` and `research/mcp-servers/`). It is not duplicated here; a forked copy is how two
 divergent versions start.
 
